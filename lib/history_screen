@@ -1,0 +1,41 @@
+import 'package:flutter/material.dart';
+import 'database_helper.dart';
+
+class HistoryScreen extends StatefulWidget {
+  @override
+  _HistoryScreenState createState() => _HistoryScreenState();
+}
+
+class _HistoryScreenState extends State<HistoryScreen> {
+  List<Map<String, dynamic>> history = [];
+
+  @override
+  void initState() {
+    super.initState();
+    loadHistory();
+  }
+
+  void loadHistory() async {
+    final data = await DatabaseHelper.instance.getHistory();
+    setState(() {
+      history = data;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("History")),
+      body: history.isEmpty
+          ? Center(child: Text("No History"))
+          : ListView.builder(
+              itemCount: history.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(history[index]['calculation']),
+                );
+              },
+            ),
+    );
+  }
+}
